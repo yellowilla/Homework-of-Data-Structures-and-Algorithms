@@ -1,0 +1,154 @@
+#include <iostream>
+
+using namespace std;
+
+const int length_La = 4;
+const int length_Lb = 3;
+
+struct LNode{
+    int coefficient;
+    int index;
+    LNode* next;
+};
+
+void CreatList(LNode* &L, int length, int coe[], int ind[])
+{
+    LNode* head = new LNode;
+    head->next = head;
+    LNode* p = head;
+    for(int i = 0; i < length; i++)
+    {
+        LNode* s = new LNode;
+        s->coefficient = coe[i];
+        s->index = ind[i];
+        p->next = s;
+        p = s;
+        s->next = head;
+    }
+    L = head;//L指向头结点
+}
+
+LNode* SumPolynomial(LNode* La, LNode* Lb, int length_a, int length_b)
+{
+    if(Lb == NULL)
+    {
+        LNode* tmp_a = La->next;
+        while(tmp_a != La)
+        {
+            if(tmp_a->coefficient > 0)
+                cout << " + " << tmp_a->coefficient << " * x^" << tmp_a->index;
+            else if(tmp_a->coefficient < 0)
+                cout << " - " << -tmp_a->coefficient << " * x^" << tmp_a->index;
+            tmp_a = tmp_a->next;
+        }
+        return La;
+    }
+    else if(La == NULL)
+    {
+        LNode* tmp_b = Lb->next;
+        while(tmp_b != Lb)
+        {
+            if(tmp_b->coefficient > 0)
+                cout << " + " << tmp_b->coefficient << " * x^" << tmp_b->index;
+            else if(tmp_b->coefficient < 0)
+                cout << " - " << -tmp_b->coefficient << " * x^" << tmp_b->index;
+            tmp_b = tmp_b->next;
+        }
+        return Lb;
+    }
+    LNode* pa = La->next;
+    LNode* pb = Lb->next;
+    LNode* Lc = La;//不分配新的空间
+    while(pa != La && pb != Lb)
+    {
+        if(pa->index < pb->index)
+        {
+            Lc->next = pa;
+            Lc = Lc->next;
+            pa = pa->next;
+        }
+        else if(pa->index > pb->index)
+        {
+            Lc->next = pb;
+            Lc = Lc->next;
+            pb = pb->next;
+        }
+        else
+        {
+            int tmpcoefficient = pa->coefficient + pb->coefficient;
+            if(tmpcoefficient == 0)
+            {
+                LNode* tmpa = pa;
+                LNode* tmpb = pb;
+                pa = pa->next;
+                pb = pb->next;
+                delete tmpa;
+                delete tmpb;
+                if(pa->index > pb->index)
+                {
+                    Lc->next = pb;
+                    Lc = Lc->next;
+                    pb = pb->next;
+                }
+                else if(pa->index < pb->index)
+                {
+                    Lc->next = pa;
+                    Lc = Lc->next;
+                    pa = pa->next;
+                }
+                else
+                    ;
+            }
+            else
+            {   pa->coefficient=tmpcoefficient;
+                Lc->next = pa;
+                Lc = Lc->next;
+                pa = pa->next;
+                LNode* tmpb2 = pb;
+                pb = pb->next;
+                delete tmpb2;
+
+            }
+        }
+    }
+    if(pb == Lb && pa != La)
+    {
+        Lc->next = pa;
+        while (pa->next!=La)
+        pa=pa->next;
+        pa->next=La;
+    }
+    else if (pb != Lb && pa == La)
+    {
+        Lc->next = pb;
+        while (pb->next!=Lb)pb=pb->next;
+        pb->next=La;
+    }
+        LNode* tmp = La->next;
+        while(tmp != La)
+        {
+            if(tmp->coefficient > 0)
+                cout << " + " << tmp->coefficient << " * x^" << tmp->index;
+            else if(tmp->coefficient < 0)
+                cout << " - " << -tmp->coefficient << " * x^" << tmp->index;
+            tmp = tmp->next;
+        }
+        cout << endl;
+        return La;
+
+}
+
+
+int main()
+{
+    LNode* La;
+    LNode* Lb;
+    int coe_La[length_La] = {7, 3, 9, 5};
+    int coe_Lb[length_Lb] = {8, 22, -9};
+    int ind_La[length_La] = {0, 1, 8, 11};
+    int ind_Lb[length_Lb] = {1, 7, 8};
+    CreatList(La, length_La, coe_La, ind_La);
+    CreatList(Lb, length_Lb, coe_Lb, ind_Lb);
+    SumPolynomial(La, Lb, length_La, length_Lb);
+    return 0;
+}
