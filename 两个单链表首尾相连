@@ -1,0 +1,62 @@
+#include <iostream>
+
+using namespace std;
+
+typedef int ElemType;
+
+typedef struct LNode{
+   ElemType data;
+   struct LNode *next;
+}LNode, *LinkList;
+
+void CreatList(LinkList &L, ElemType A[], int n)
+{
+   L = NULL;
+   for(int i = n - 1; i >= 0 ; --i)
+   {
+      LinkList s = new LNode;
+      s->data = A[i];
+      s->next = L;
+      L = s;
+   }
+}
+
+LinkList Link(LinkList &ha, LinkList &hb, int m, int n)
+{
+   LinkList hc;
+   if(m >= n)
+   {
+      hc = hb;
+      while(hb->next != NULL)
+         hb = hb->next;
+      hb->next = ha;
+   }
+   else
+   {
+      hc = ha;
+      while(ha->next != NULL)
+         ha = ha->next;
+      ha->next = hb;
+   }
+   return hc;
+}
+
+int main()
+{
+    int m = 5, n = 10;
+    ElemType HA[m], HB[n];
+    for(int i = 0; i < m; i++)
+      HA[i] = i + 1;
+    for(int j = 0; j < n; j++)
+      HB[j] = j + 1;
+    LinkList ha, hb;
+    CreatList(ha, HA, m);
+    CreatList(hb, HB, n);
+    LinkList hc = Link(ha, hb, m, n);
+    while(hc)
+    {
+       cout << hc->data << endl;
+       hc = hc->next;
+    }
+    return 0;
+}
