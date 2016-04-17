@@ -1,0 +1,87 @@
+#include <iostream>
+
+using namespace std;
+
+const int MAXSIZE = 8;
+
+typedef int KeyType;
+typedef int InfoType;
+
+typedef struct{
+    KeyType key;
+    InfoType otherinfo;
+}RcdType;
+
+typedef struct{
+    RcdType *r;
+    int length;;
+}SqList;
+
+void InitList_Sq(SqList &L, int MAXSIZE)
+{
+    L.r = new RcdType[MAXSIZE + 1];
+    L.length = 0;
+}
+
+void Assign(SqList &L, int MAXSIZE)
+{
+    int a[8] = {49, 38, 65, 97, 76, 13, 27, 49};
+    L.length = 1;
+    for(int i = 1; i <= MAXSIZE; ++i)
+    {
+        L.r[i].key = a[i - 1];
+        L.length ++;
+        cout << L.r[i].key << " ";
+    }
+    cout << endl;
+    cout << endl;
+}
+
+void Swap(RcdType &a, RcdType &b)
+{
+    RcdType W;
+    W = a;
+    a = b;
+    b = W;
+}
+
+void BubbleSort_2ways(SqList &L)
+{
+    int left = 1;
+    int right = MAXSIZE;
+    int i;
+    int lastExchangeIndex = 0;
+    while(left < right)
+    {
+        for(i = left; i < right; i++)
+        {
+            if(L.r[i + 1].key < L.r[i].key)
+            {
+                Swap(L.r[i + 1], L.r[i]);
+                lastExchangeIndex = i;
+            }
+        }
+        right = lastExchangeIndex;
+        for(i = right; i > left; i--)
+        {
+            if(L.r[i].key < L.r[i - 1].key)
+            {
+                Swap(L.r[i], L.r[i - 1]);
+                lastExchangeIndex = i;
+            }
+        }
+        left = lastExchangeIndex;
+    }
+    for(i = 1; i <= MAXSIZE; ++i)
+        cout << L.r[i].key << " ";
+    cout << endl;
+}
+
+int main()
+{
+    SqList L;
+    InitList_Sq(L, MAXSIZE);
+    Assign(L, MAXSIZE);
+    BubbleSort_2ways(L);
+    return 0;
+}
