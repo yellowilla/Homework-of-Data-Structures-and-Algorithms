@@ -1,0 +1,71 @@
+#include <iostream>
+
+using namespace std;
+
+typedef int ElemType;
+
+const ElemType mink = 3;
+const ElemType maxk = 9;
+
+typedef struct LNode{
+   ElemType data;
+   struct LNode *next;
+}LNode, *LinkList;
+
+void CreatList(LinkList &L, ElemType A[], int n)
+{
+   L = NULL;
+   for(int i = n - 1; i >= 0 ; --i)
+   {
+      LinkList s = new LNode;
+      s->data = A[i];
+      s->next = L;
+      L = s;
+   }
+}
+
+void ListDelete(LinkList &L, LinkList p)
+{
+   if(p == L)
+      L = L->next;
+   else
+   {
+      LinkList q = L;
+      while(q->next != p)
+         q = q->next;
+      q->next = p->next;
+   }
+   delete p;
+}
+
+void DelPart(LinkList &L, ElemType mink, ElemType maxk)
+{
+   LinkList tmp = L,s;
+   while(tmp)
+   {
+      if(tmp->data > mink && tmp->data < maxk)
+        {
+            s=tmp;
+            tmp = tmp->next;
+            ListDelete(L,s);
+        }
+        else tmp=tmp->next;
+   }
+}
+
+int main()
+{
+    int n = 10;
+    ElemType A[n];
+    for(int i = 0; i < n; i++)
+      A[i] = i + 1;
+    LinkList L;
+    CreatList(L, A, n);
+    DelPart(L, mink, maxk);
+    while(L)
+    {
+       cout << L->data << endl;
+       L = L->next;
+    }
+    return 0;
+}
