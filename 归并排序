@@ -1,0 +1,82 @@
+#include <iostream>
+
+using namespace std;
+
+const int MAXSIZE = 8;
+
+typedef int KeyType;
+typedef int InfoType;
+
+typedef struct{
+    KeyType key;
+    InfoType otherinfo;
+}RcdType;
+
+typedef struct{
+    RcdType *r;
+    int length;;
+}SqList;
+
+void InitList_Sq(SqList &L, int MAXSIZE)
+{
+    L.r = new RcdType[MAXSIZE + 1];
+    L.length = 0;
+}
+
+void Assign(SqList &L, int MAXSIZE)
+{
+    int a[8] = {49, 38, 65, 97, 76, 13, 27, 49};
+    L.length = 1;
+    for(int i = 1; i <= MAXSIZE; ++i)
+    {
+        L.r[i].key = a[i - 1];
+        L.length ++;
+        cout << L.r[i].key << " ";
+    }
+    cout << endl;
+    cout << endl;
+}
+
+void Merge(RcdType SR[],RcdType TR[], int i, int m, int n)
+{
+    int j, k;
+    for(j = m + 1, k = i; i <= m && j <= n; ++k)
+    {
+        if(SR[i].key <= SR[j].key)
+            TR[k] = SR[i++];
+        else
+            TR[k] = SR[j++];
+    }
+    while(i <= m)
+        TR[k++] = SR[i++];
+    while(j <= n)
+        TR[k++] = SR[j++];
+}
+
+void Msort(RcdType SR[], RcdType TR1[], int s, int t)
+{
+    RcdType *TR2;
+    TR2 = new RcdType[t - s + 1];
+    if(s == t)
+        TR1[s] = SR[s];
+    else
+    {
+        int m = (s + t)/2;
+        Msort(SR, TR2, s, m);
+        Msort(SR, TR2, m + 1, t);
+        Merge(TR2, TR1, s, m, t);
+    }
+}
+
+int main()
+{
+    SqList L;
+    InitList_Sq(L, MAXSIZE);
+    Assign(L, MAXSIZE);
+    Msort(L.r, L.r, 1, MAXSIZE);
+    for(int i = 1; i <= MAXSIZE; ++i)
+        cout << L.r[i].key << " ";
+    cout << endl;
+    cout << endl;
+    return 0;
+}
