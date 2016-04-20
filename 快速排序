@@ -1,0 +1,81 @@
+#include <iostream>
+
+using namespace std;
+
+const int MAXSIZE = 8;
+
+typedef int KeyType;
+typedef int InfoType;
+
+typedef struct{
+    KeyType key;
+    InfoType otherinfo;
+}RcdType;
+
+typedef struct{
+    RcdType *r;
+    int length;;
+}SqList;
+
+void InitList_Sq(SqList &L, int MAXSIZE)
+{
+    L.r = new RcdType[MAXSIZE + 1];
+    L.length = 0;
+}
+
+void Assign(SqList &L, int MAXSIZE)
+{
+    int a[8] = {49, 38, 65, 97, 76, 13, 27, 49};
+    L.length = 1;
+    for(int i = 1; i <= MAXSIZE; ++i)
+    {
+        L.r[i].key = a[i - 1];
+        L.length ++;
+        cout << L.r[i].key << " ";
+    }
+    cout << endl;
+    cout << endl;
+}
+
+int Partition(RcdType R[], int low, int high)
+{
+    R[0] = R[low];
+    KeyType pivotkey = R[low].key;
+    while(low < high)
+    {
+        while(low < high && R[high].key >= pivotkey)
+            --high;
+        if(low < high)
+            R[low++] = R[high];
+        while(low < high && R[low].key <= pivotkey)
+            ++low;
+        if(low < high)
+            R[high--] = R[low];
+    }
+    R[low] = R[0];
+    /*for(int i = 1; i <= MAXSIZE; ++i)
+        cout << R[i].key << " ";*/
+    return low;
+}
+
+void Qsort(RcdType R[], int s, int t)
+{
+    if(s < t)
+    {
+        int pivotloc = Partition(R, s, t);
+        Qsort(R, s, pivotloc - 1);
+        Qsort(R, pivotloc + 1, t);
+    }
+}
+
+int main()
+{
+    SqList L;
+    InitList_Sq(L, MAXSIZE);
+    Assign(L, MAXSIZE);
+    //Partition(L.r, 1, MAXSIZE);
+    Qsort(L.r, 1, MAXSIZE);
+    for(int i = 1; i <= MAXSIZE; ++i)
+        cout << L.r[i].key << " ";
+    return 0;
+}
