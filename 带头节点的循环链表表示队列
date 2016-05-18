@@ -1,0 +1,75 @@
+#include <iostream>
+
+using namespace std;
+
+typedef int ElemType;
+typedef int QElemType;
+
+typedef struct LNode{
+   ElemType data;
+   struct LNode *next;
+}LNode, *LinkList;
+typedef LinkList QueuePtr;
+
+typedef struct{
+    QueuePtr rear;
+}LinkQueue;
+
+void InitQueue_L(LinkQueue &Q)
+{
+    Q.rear = new LNode;
+    Q.rear->next = Q.rear;
+}
+
+void EnQueue_L(LinkQueue &Q, QElemType e)
+{
+    QueuePtr head, p;
+    head = Q.rear->next;
+    p = new LNode;
+    p->data = e; p->next = head;
+    Q.rear->next = p;
+    Q.rear = p;
+}
+
+bool DeQueue_L(LinkQueue &Q, QElemType &e)
+{
+    if(Q.rear->next == Q.rear)
+        return false;
+    QueuePtr p;
+    p = Q.rear->next->next;
+    e = p->data;
+    Q.rear->next->next = p->next;
+    if(Q.rear == p)
+        Q.rear->next = Q.rear;
+    delete p;
+    return true;
+}
+
+void TraversQueue_Sq(LinkQueue Q)
+{
+    QueuePtr p;
+    p = Q.rear->next;
+    while(p->next != Q.rear->next)
+    {
+        cout << p->next->data << " ";
+        p = p->next;
+    }
+    cout << endl;
+}
+
+int main()
+{
+    LinkQueue Q;
+    InitQueue_L(Q);
+    int A[10], n = 10;
+    for(int i = 0; i < n; i ++)
+    {
+        A[i] = i;
+        EnQueue_L(Q,A[i]);
+    }
+    TraversQueue_Sq(Q);
+    QElemType x;
+    DeQueue_L(Q, x);
+    TraversQueue_Sq(Q);
+    return 0;
+}
