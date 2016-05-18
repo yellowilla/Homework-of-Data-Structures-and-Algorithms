@@ -1,0 +1,98 @@
+#include <iostream>
+
+using namespace std;
+
+const int SIZE = 100;
+
+typedef struct{
+    int nval;
+    int xval;
+    int yval;
+}ElemType;
+typedef struct{
+    ElemType *elem;
+    int top;
+    int stacksize;
+}Sqstack;
+
+void InitStack(Sqstack &S, int maxsize = SIZE)
+{
+    S.elem = new ElemType[maxsize];
+    S.top = -1;
+    S.stacksize = maxsize;
+}
+
+void Push(Sqstack &S, ElemType e)
+{
+    S.elem[++S.top] = e;
+}
+
+ElemType Pop(Sqstack &S, ElemType &e)
+{
+    e = S.elem[S.top --];
+    return e;
+}
+
+bool StackEmpty(Sqstack S)
+{
+    if(S.top == -1)
+        return true;
+    else
+        return false;
+}
+
+ElemType GetTop(Sqstack S)
+{
+    ElemType e;
+    e = S.elem[S.top];
+    return e;
+}
+
+int value (int n, int x, int y)
+{
+    if(n == 0)
+        return (x + 1);
+    else switch(n){
+        case 1 : return x;
+        case 2 : return 0;
+        case 3 : return 1;
+        default : return 2;
+    }
+}
+
+int Ackerman(int n, int x, int y)
+{
+    int u;
+    Sqstack S;
+    InitStack(S, SIZE);
+    ElemType e;
+    e.nval = n; e.xval = x; e.yval = y;
+    Push(S, e);
+    do{
+        e = GetTop(S);
+        while(e.nval != 0 && e.yval != 0)
+        {
+            e.yval --;
+            return Ackerman(e.nval - 1, Ackerman(e.nval, e.xval, e.yval), e.xval);
+        }
+        Pop(S, e);
+        u = value(e.nval, e.xval, e.yval);
+        if(!StackEmpty(S)){
+            Pop(S, e);
+            e.nval --;
+            e.yval = e.xval;
+            e.xval = u;
+            Push(S, e);
+        }
+    }while(!StackEmpty(S));
+    return u;
+}
+
+int main()
+{
+    int n, x, y, u;
+    n = 3; x = 2; y = 1;
+    u = Ackerman(n, x, y);
+    cout << u << endl;
+    return 0;
+}
