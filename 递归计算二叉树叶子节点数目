@@ -1,0 +1,46 @@
+#include <iostream>
+
+using namespace std;
+
+typedef char ElemType;
+
+typedef struct BiTNode{
+    ElemType data;
+    struct BiTNode *lchild, *rchild;
+}BiTNode, *BiTree;
+
+void CreatebiTree(BiTNode* &T)
+{
+    ElemType ch;
+    cin >> ch;
+    if(ch == '#')
+        T = NULL;
+    else{
+        T = new BiTNode;
+        T->data = ch;
+        CreatebiTree(T->lchild);
+        CreatebiTree(T->rchild);
+    }
+}
+
+int CountRoot(BiTNode *&T)
+{
+    if(T == NULL)
+        return 0;
+    else if(T->lchild == NULL && T->rchild == NULL)
+        return 1;
+    int l = CountRoot(T->lchild);
+    int r = CountRoot(T->rchild);
+    return l + r;
+}
+
+int main()
+{
+    BiTNode *T;
+    CreatebiTree(T);
+    cout << endl;
+    int Croot;
+    Croot = CountRoot(T);
+    cout << Croot << endl;
+    return 0;
+}
