@@ -1,0 +1,62 @@
+#include <iostream>
+
+using namespace std;
+
+typedef char ElemType;
+
+typedef struct BiTNode{
+    ElemType data;
+    struct BiTNode *lchild, *rchild;
+}BiTNode, *BiTree;
+
+void CreatebiTree(BiTNode* &T)
+{
+    ElemType ch;
+    cin >> ch;
+    if(ch == '#')
+        T = NULL;
+    else{
+        T = new BiTNode;
+        T->data = ch;
+        CreatebiTree(T->lchild);
+        CreatebiTree(T->rchild);
+    }
+}
+
+void ReverseTree(BiTNode *&T)
+{
+    if(!T)
+        return;
+    BiTNode *Tmp;
+    Tmp = T->lchild;
+    T->lchild = T->rchild;
+    T->rchild = Tmp;
+    ReverseTree(T->lchild);
+    ReverseTree(T->rchild);
+}
+
+void Visit(BiTNode *T)
+{
+    if(T->data != '#')
+        cout << T->data;
+}
+
+void Preorder(BiTNode *T)
+{
+    if(T == NULL)
+        return;
+    Visit(T);
+    Preorder(T->lchild);
+    Preorder(T->rchild);
+}
+
+int main()
+{
+    BiTNode *T;
+    CreatebiTree(T);
+    cout << endl;
+    ReverseTree(T);
+    Preorder(T);//先序输出左右子树交换后的二叉树
+    cout << endl;
+    return 0;
+}
